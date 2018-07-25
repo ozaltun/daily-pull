@@ -2,6 +2,8 @@
 class and functions pull data from APIs. At the moment it is limited to Spotify's
 API, but can be expandedself.
 
+We set the environment variables in aws ssm using the terminal command:
+aws ssm put-parameter --name supermanToken --type String --value mySupermanToken
 """
 
 import requests
@@ -12,8 +14,8 @@ import datetime
 from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
 
-SPOTIPY_CLIENT_ID= os.getenv('SPOTIPY_CLIENT_ID')
-SPOTIPY_CLIENT_SECRET= os.getenv('SPOTIPY_CLIENT_SECRET')
+SPOTIFY_CLIENT_ID= os.getenv('SPOTIFY_CLIENT_ID')
+SPOTIFY_CLIENT_SECRET= os.getenv('SPOTIFY_CLIENT_SECRET')
 
 class spotifyArtist:
     def __init__(self, id, token):
@@ -80,10 +82,10 @@ def getSpotifyIDToken(artistName):
     artistIDs = artistList[artistID[artistName]]
     artistSpotifyID = artistIDs['spotify'][0]
 
-    client = BackendApplicationClient(client_id=SPOTIPY_CLIENT_ID)
+    client = BackendApplicationClient(client_id=SPOTIFY_CLIENT_ID)
     oauth = OAuth2Session(client=client)
     token = oauth.fetch_token(token_url='https://accounts.spotify.com/api/token',
-    client_id=SPOTIPY_CLIENT_ID,client_secret=SPOTIPY_CLIENT_SECRET)
+    client_id=SPOTIFY_CLIENT_ID,client_secret=SPOTIFY_CLIENT_SECRET)
 
     return artistSpotifyID, token
 

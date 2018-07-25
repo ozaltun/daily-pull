@@ -16,12 +16,16 @@ service: dailyPull
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
+frameworkVersion: ">=1.1.0 <2.0.0"
 
 provider:
   name: aws
   runtime: python3.6
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    MYEMAIL: ${ssm:MYEMAIL}
+    SPOTIFY_CLIENT_ID: ${ssm:SPOTIFY_CLIENT_ID}
+    SPOTIFY_CLIENT_SECRET: ${ssm:SPOTIFY_CLIENT_SECRET}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -35,7 +39,7 @@ provider:
 
 functions:
   daily:
-    handler: todos/create.daily
+    handler: create.daily
     events:
       - schedule: rate(1 day)
 resources:
