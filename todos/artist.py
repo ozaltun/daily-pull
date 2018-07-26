@@ -91,17 +91,17 @@ def getSpotifyIDToken(artistName):
 
 
 
-def getDailyData(artistName):
-    artistSpotifyID, token = getSpotifyIDToken(artistName)
-    artistObject = spotifyArtist(artistSpotifyID, token)
-    artistObject.getArtistGeneral()
-    artistObject.getArtistAlbums()
-    artistObject.getArtistTopTracks('US')
-    artistObject.getArtistRelatedArtists()
-    popularity = artistObject.dict['artistGeneral']['popularity']
-    followers = artistObject.dict['artistGeneral']['followers']['total']
-
-
+def getDailyData(artistList):
+    # Lets now assume that artistList contains a list of artist names!
+    finalList = []
     now = datetime.datetime.now()
     now = now.strftime("%Y-%m-%d %H:%M")
-    return {'Date':now, 'Artist': artistName, 'Spotify Popularity': popularity, 'Spotify Followers': followers}
+    for artistName in artistList:
+        artistSpotifyID, token = getSpotifyIDToken(artistName)
+        artistObject = spotifyArtist(artistSpotifyID, token)
+        artistObject.getArtistGeneral()
+        popularity = artistObject.dict['artistGeneral']['popularity']
+        followers = artistObject.dict['artistGeneral']['followers']['total']
+        finalList.append({'Date':now, 'Artist': artistName, 'Spotify Popularity': popularity, 'Spotify Followers': followers})
+
+    return finalList

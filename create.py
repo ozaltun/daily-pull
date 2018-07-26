@@ -13,17 +13,20 @@ from todos.artist import *
 from todos.search import * #Instead of importing, you should try to create an object that basically points to the helper file location
 dynamodb = boto3.resource('dynamodb')
 
+def getArtistList():
+    return ['Major Lazer', 'Maroon 5']
+
 def daily(event, context):
-    data = getDailyData('Major Lazer')
+    artistList = getArtistList()
+    data = getDailyData(artistList)
     table = dynamodb.Table(os.environ['DYNAMODB_TABLE'])
 
-    item = data
-
-    table.put_item(Item=item)
+    for item in data:
+        table.put_item(Item=item)
 
     response = {
             "statusCode": 200,
-            "body": json.dumps(item)
+            "body": json.dumps(data)
     }
     return response
 
@@ -34,12 +37,13 @@ def addArtist(artistName,id=None):
 
 def removeArtist(artistName, id=None):
     removeArtistFromJSON(artistName)
-
-if __name__ == '__main__':
-    print(addArtist(artistName='Maroon 5'))
+#
+# if __name__ == '__main__':
+#     print(addArtist(artistName='Maroon 5'))
 def create(event, context):
-    data = getDailyData('Major Lazer')
-    print(getDailyData('Major Lazer'))
+    artistList = getArtistList()
+    data = getDailyData(artistList)
+    print(data)
 
 if __name__ == '__main__':
     print(create('',''))
